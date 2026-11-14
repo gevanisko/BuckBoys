@@ -1,0 +1,19 @@
+----------------------------------------------------------------------------------------------------------------------------------
+NCDrill File Report For: ECE362_BuckV2.PcbDoc   11/6/2026  4:15:09 PM
+----------------------------------------------------------------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII Plated RoundHoles File : ECE362_BuckV2-RoundHoles-Plated.TXT
+ASCII Plated SlotHoles File : ECE362_BuckV2-SlotHoles-Plated.TXT
+
+Tool       Hole Size               Hole Tolerance               Hole Type       Hole Count   Plated         Tool Travel
+----------------------------------------------------------------------------------------------------------------------------------
+T1      12mil (0.3mm)                                             Round             248       PTH        45.03inch (1143.70mm)
+T2      24mil (0.6mm)                                             Slot              4         PTH        1.45inch (36.92mm)
+T3      39mil (1mm)                                               Round             19        PTH        3.49inch (88.71mm)
+T4      40mil (1.02mm)                                            Round             3         PTH        0.20inch (5.08mm)
+T5      51mil (1.3mm)                                             Round             4         PTH        3.18inch (80.72mm)
+----------------------------------------------------------------------------------------------------------------------------------
+Totals                                                                              278
+
+Total Processing Time (hh:mm:ss) : 00:00:00
