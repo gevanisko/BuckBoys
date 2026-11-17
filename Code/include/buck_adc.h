@@ -1,5 +1,5 @@
-#ifndef ADC_H
-#define ADC_H
+#ifndef BUCK_ADC_H
+#define BUCK_ADC_H
 
 #include <stdint.h>
 #include <stdbool.h>
