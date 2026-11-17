@@ -8,7 +8,8 @@
 #include "hardware/adc.h"
 #include "buck_adc.h"    // when you add ADC sensing
 #include "buck_pwm.h"
-
+#include "buck_adc.h"
+#include "buck_SD_logger.h"
 
 
 // //spi 1 - SD CARD
@@ -65,30 +66,44 @@
 
 //     return(0);
 // }
+
+
+
+#define LOG_PERIOD_MS   100     // 10 rows per second
+#define LOG_DURATION_MS 30000   // 30 s test
+
 int main(void) {
     stdio_init_all();
-    sleep_ms(2000);   // let USB serial connect
+    sleep_ms(2000);
+    printf("\n--- SD card logging test ---\n");
 
-    printf("\n--- ADC DMA test (scaled) ---\n");
     init_adc();
+    if (!sd_log_init()) {
+        printf("Check: card inserted? FAT32 formatted? wiring?\n");
+        while (true) tight_loop_contents();
+    }
 
-    while (true) {
-        adc_start_capture();
-        while (!adc_capture_done()) {
-            // ~11 ms capture; CPU is free here
-        }
+    uint32_t start = to_ms_since_boot(get_absolute_time());
+    uint32_t next  = start;
+    int rows = 0;
 
+    while (to_ms_since_boot(get_absolute_time()) - start < LOG_DURATION_MS) {
         adc_readings_t r;
+        adc_start_capture();
+        while (!adc_capture_done()) { }
         adc_buf_average(&r);
 
-        float pin  = r.vin  * r.iin;
-        float pout = r.vout * r.iout;
-        float eff  = (pin > 0.01f) ? 100.0f * pout / pin : 0.0f;
-
-        printf("IN:  %6.2f V  %6.3f A  %6.2f W\n", r.vin,  r.iin,  pin);
-        printf("OUT: %6.2f V  %6.3f A  %6.2f W   eff %5.1f%%\n\n",
-               r.vout, r.iout, pout, eff);
-
-        sleep_ms(500);
+        uint32_t now = to_ms_since_boot(get_absolute_time());
+        if ((int32_t)(now - next) >= 0) {
+            if (!sd_log_write(&r)) printf("SD: write failed\n");
+            rows++;
+            next += LOG_PERIOD_MS;
+            if (rows % 10 == 0)
+                printf("%d rows  (Vin %.2f V  Vout %.2f V)\n", rows, r.vin, r.vout);
+        }
     }
+
+    sd_log_close();
+    printf("Done: %d rows written. Safe to remove the card.\n", rows);
+    while (true) tight_loop_contents();
 }
