@@ -6,7 +6,8 @@
 #include "hardware/gpio.h"    // full GPIO API
 #include "hardware/pwm.h"     // when you add PWM for the buck converter
 #include "hardware/adc.h"
-#include "adc.h"    // when you add ADC sensing
+#include "buck_adc.h"    // when you add ADC sensing
+#include "buck_pwm.h"
 
 
 
